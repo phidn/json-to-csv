@@ -22,6 +22,12 @@
 <!-- JSON5 parser -->
 <script src='assets/json5-2.1.0.min.js'></script>
 
+<!-- PapaParse -->
+<script src='assets/papaparse.min.js'></script>
+
+<!-- FileSaver -->
+<script src='assets/FileSaver.min.js'></script>
+
 <!-- jquery, jquery-csv,bootstrap -->
 <script src='assets/jquery-2.1.1.min.js'></script>
 <script src="assets/jquery.csv.js"></script>
@@ -82,6 +88,23 @@
 
     return true;
   }
+
+
+  function downloadCSV() {
+      var csv = $(".json textarea").val();
+      var json = jsonFrom(input);
+
+      var inArray = arrayFrom(json);
+      var outArray = [];
+      for (var row in inArray) {
+        outArray[outArray.length] = parse_object(inArray[row]);
+      }
+
+      var csv = Papa.unparse(outArray, { encoding: "utf-16" });
+      var blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-16" });
+      saveAs(blob, "result.csv");
+    }
+
 
   function renderAll(e) {
     var json = jsonFrom(input);
@@ -387,6 +410,9 @@
         </span>
 
       or <a href="#" class="raw">show the raw data</a>.
+
+      <button class="btn-download" onclick="downloadCSV()">Download v2</button>
+
     </span>
 
     <span class="editing">
